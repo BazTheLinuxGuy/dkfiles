@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset="utf-8" />
+    <title>dkedit</title>
+	<link rel="stylesheet" href="/css/change.css" />
+    <style>
+      body {
+		align-items: left;
+        text-align: left;
+        left-margin: 75px;
+        background-color: lightblue;
+        padding: 20px 75px;
+     }
+	 header {
+        display: flex;
+        background-color: #e1e1e1;
+        color: #004066;
+        font-size:10pt;
+        font-family: "Sriracha",cursive,serif;
+        align-items: left;
+	 }
+	 
+	 div.instructions {
+		 font-family: "Georgia","Verdana",sans-serif,cursive;
+		 text-align: justify;
+		 padding: 0px 25px 0px 25px;
+	 }
+ 
+    h1 {
+        color: darkgreen;
+        text-align: left;
+    }
+    h2 {
+        color: black;
+        text-align: left;
+        left-margin: 75px;
+    }
+
+    p {
+        color: black;
+        text-align:left;
+        left-margin: 75px;
+    }
+    img {
+        padding: 10px 10px;
+    }
+    table, th, td {
+        border: 0;
+    }
+	</style>
+	<script>
+	  function valid8() {
+		  let x = document.forms["change"]["term"].value;
+		  if (x == "") {
+			  alert ("Enter a search term!");
+			  return false;
+		  }
+	  }
+	</script>
+  </head>
+  <body>
+
+    <header>Change or delete a file in the database</header>
+	<nav>
+	  <a href="/menu.html">Home (Menu)</a>
+	  <a href="/lookup.html">Lookup</a>
+	  <a href="/thankyou.html">Quit</a>
+	</nav> 
+
+	<!--
+		<h3><b>Change or delete a file record</b></h3> 
+	
+		<div class="instructions">
+		  The purpose of this page is to locate the record you want
+		  to change or delete. If you already know the file id number,
+		  put it in the search box.
+		</div>
+	-->	
+	<h4><b>Finding a file record</b></h4>
+	<p>There are two ways to proceed. 
+	<ol>
+	  <li>Search with a file id or search term</li>
+      <li>Search all the records in the database.</li>
+    </ol>
+	
+	
+	<table>
+	  <form name="change" method="post" action="/cgi-bin/change.py">
+		<tr>
+		  <td><b>1.</b></td><td><label for="term">Get records that match:</label></td>
+		  <td>
+			<input type="text" name="term" id="term" size="25" /></td>
+		  <td>
+			<input type="submit" name="submit" id="submit" value="Search" />
+		  </td>
+		</tr>
+		<tr>
+		  <td />
+		 
+		</tr>
+<!--		<tr><td colspan="3" /></tr>  # Blank line  -->
+		<tr>
+		  <td><b>2. </b></td>
+		  <td><label for="submit">Browse through all records:</label></td>
+		  <td>
+			<input type="submit" name="submit" id="submit" value="Browse" />
+		  </td>
+		</tr>
+      </form>
+	</table>	  
+	<br />
+	<button id="menu" name="menu" onclick='location.href="/menu.html";' />
+Home</button>
+    <br />
+  </body>
+</html>

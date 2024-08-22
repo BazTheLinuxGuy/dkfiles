@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+ "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta charset="utf-8" />
+	  <title>Lookup</title>
+	  <link rel="stylesheet" href="/css/dkfiles.css" />
+	<script>
+	  function d() {
+		  var dt = new Date;
+		  return dt;
+	  }
+	</script>
+  </head>
+  <body>
+	<nav class="nav">
+	  <a class="nav" href="/menu.html">Home (Menu)</a>
+	  <a class="nav" href="/change.html">Edit or Delete</a>
+	  <a class="nav" href="/cgi-bin/report.py">Report</a>
+	  <a class="nav" href="/thankyou.html">Quit</a>
+	</nav>
+	<br />
+	<header>This page is part of the &quot;dkfiles&quot; project.</header>
+	<h2>Lookup a record</h2>
+	<h4>Please enter your search term:</h4>
+	<form name="myform" method="POST" action="/cgi-bin/lookup.py">
+	  <label for="term">Look in dkfiles for: </label>
+	  <input type="text" id="term" name="term" size="40" />
+	  <br />
+	  <input type="submit" name="submit" Value="Lookup" />
+	  <br />
+	</form>
+	<hr /><br />
+	<button id="b1" name="menu"
+			onclick="location.href='/menu.html';">Menu</button>
+	<br /><br />
+	<button onclick="document.getElementById('demo').innerHTML = Date()">
+	  Click me to display Date and Time.</button>
+    <p id="demo"></p>
+	
+	<div class="copy">
+	  <div class="copy-text">
+		<p>&copy; 2024 Kevin Baumgarten, All rights reserved.</p>
+	  </div>
+	</div>
+  </body>
+</html>
