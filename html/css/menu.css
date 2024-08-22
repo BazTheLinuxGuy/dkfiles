@@ -1,0 +1,81 @@
+/* menu.css - CSS Template for the Main Menu of dkfiles
+   Updated: Friday, May 17, 2024 17:00  */
+body {
+/*	background-color: #2196F3;
+	color: #e1e1e1; */
+	border-style: solid;
+	gap: 20px;
+}	
+
+.nav {
+	display: flex;
+/*	grid-template-columns: auto auto auto auto 
+	/*	border-style: solid */ 
+	background-color: #e1f1f1;
+	color: #404040;
+}								
+
+a.nav {
+	background-color: darkblue;
+	color: lightgrey;
+	margin-left: 50px;
+	font-size: 12pt;
+	font-family: sans-serif;
+}
+
+header {
+    display: flex; 
+	background-color: #004066;
+	color: #e1e1e1;
+    font-size:10pt;
+	font-family: Arial,sans-serif;
+	align-items: left;
+	padding-top: 10px;
+	padding-left: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 25px;
+  background-color: #2196F3;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;  
+  padding-bottom: 10px;
+}
+
+.grid-container div {
+/*	background-color: rgba(255, 255, 255, 0.5); */
+	color: #004066;
+	jutify-items: center;
+	text-align: center;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 30px;
+	padding-right: 10px;
+	font-size: 1.2em;
+	font-family: "Lucida Console",sans-serif;
+}
+
+.mainmenu div {
+	background-color: #2196F3;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}	
+					 
+.copy {
+	position: absolute;
+	justify-content: center;
+	align-items: bottom;
+	padding: 20px 0px;
+}
+.copy-text p {
+	position: relative;
+	font-size: 7pt;
+	font-weight: bold;
+	color: black;
+	left-margin: 100px;
+	bottom: auto;
+}
