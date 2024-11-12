@@ -10,21 +10,21 @@ from MyFile import *
 def main():
     con = sqlite3.connect(db)
     cur = con.cursor()
-    sql = 'SELECT MAX(fileid) FROM newfiles WHERE fileid < 2000'
+    sql = 'SELECT MAX(fileid) FROM newfiles WHERE fileid < 9000'
     cur.execute(sql)
     row = cur.fetchone()
     nextid = row[0] + 1
     if not isinstance(nextid,int):
-        print('*** nextid isn\'t an int, bailing out...',file=sys.stderr)
+        print('*** nextid isn\'t an int, bailing out...')
         return -999
     if nextid is None:
         print('nextid is "None". Now we\'re really screwed.',file=sys.stderr)
         return -99
-    if nextid >= 8999:
+    if nextid >= 9000:
         nextid= 1001
         
-    print('Content-type: text/plain;charset=utf-8\n\n')
-    print(nextid)
+    print('Content-type: text/html;charset=utf-8\n\n')
+    print(f'<p>File id: {nextid}</p>')
     return nextid
 
 

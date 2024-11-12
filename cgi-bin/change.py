@@ -4,11 +4,7 @@
 # Updated on: Friday, June 28, 2024 5:00 AM	  .
 # Updated: Saturday, July 13, 2024 03:59:30	 .
 
-import os
-import sys
-import sqlite3
 import mycgi
-from collections import namedtuple
 
 from MyFile import *
 
@@ -52,7 +48,7 @@ def database_transaction(sql: str) -> list:
 					w('Empty\n')
 		con.close()
 	except sqlite3.Error as er:
-		sqlite3_error(er)
+		sqlite3_error()
 	except Exception as e:
 		tup = sys.exc_info()
 		error_page(e)
@@ -64,13 +60,13 @@ def database_transaction(sql: str) -> list:
 dbt = database_transaction
 
 
-def sqlite3_error():
+def sqlite3_error(err):
 	myhtml = '''
 	<html><head><meta charset="utf-8"><title>Sqlite3 Error</title>
 	<link rel="stylesheet" href="/css/entry.css" />
 	<style>
 	  body { text-align: left; background-color: lightblue;color: #004066;padding-left:100px; }
-    header { background-color: #004066; color: #e1e1e1; padding 0 100px; }
+	header { background-color: #004066; color: #e1e1e1; padding 0 100px; }
 	  img { padding: 10px 10px; }
 	  button { left-margin: 100px; }
 	  table, th, td { border: 2px solid black; }
@@ -78,12 +74,12 @@ def sqlite3_error():
 	<body>
 	<header>Details of the sqlite3 error that we have just encountered</header>
 	<nav>
-	  <a href="/menu.html">Home (Menu)</a>
+	  <a href="/menu.html">Home</a>
 	  <a href="/lookup.html">Lookup</a>
 	  <a href="/thankyou.html>Quit entirely</a>
 	<nav>
 	<h2>You have encountered an error</h2><hr />'''
-
+	htmlstr=''
 	htmlstr += f'''
 	<table>
 	<tr><th colspan="2">Details:</th></tr>
@@ -246,7 +242,7 @@ td { padding-left: 10px; }
   </div>
 </div>
 </body></html>'''
-    
+	
 	w(f'myhtml makes sense, here are the first 50 characters:\n')
 	w(f'{myhtml[0:50]}\n')
 	w('We\'re about to print myhtml as a web page:\n')
@@ -321,8 +317,8 @@ def return_html(pageno: int, records: list):
 	
 	w('We have now written the <head> section of the page to be returned.\n')
 
-	if DEBUG > 1:
-		w('at line 326, myhtml is:\n')
+	if DEBUG:
+		w('at line 325, myhtml is:\n')
 		w(f'\n{myhtml}\n\n')
 
 	myhtml += f'''
@@ -332,28 +328,40 @@ def return_html(pageno: int, records: list):
 	<a href="/thankyou.html">Quit Entirely</a></nav>
 <h2>This page will lead you to edit or delete a record from the database, or to cancel.</h2>
 <hr />
-<div class="form1">
+	<div class="form1">
 <form method="post" action="/cgi-bin/change.py">
 <p>Page: {pageno}</p>
 <table>
-<tr><th>File ID</th><th>Contents</th><th>Location<th>Edit</th><th>Delete</th></tr>
-'''
+<tr><th>File ID</th><th>Contents</th><th>Location<th>Edit</th><th>Delete</th></tr>'''
 
 	w('We are now going to enumerate the record from the database.\n')
 	w(f'{records=}\n')
-
+	
+	# DEBUGGING:	
+	w(f'We got back {len(records)}\n')
 	for i, tup in enumerate(records):
 		thisrec = onefile._make(tup)
 		w(f'{thisrec=}\n')
-		myhtml += f'''
-<tr>
-  <td><b>{thisrec.fileid}</b></td>
-  <td>{thisrec.sd}</td>
-  <td>{locations[thisrec.lo]}</td>
-  <td><input type="button"
-	onclick="location.href='/cgi-bin/edit.py?fileid={thisrec.fileid}';" value="Edit" /></td>
-  <td><input type="button"
-	onclick="location.href='/cgi-bin/confirmdel.py?fileid={thisrec.fileid}';" value="Delete" /></td>
+	
+		loc = locations[thisrec.lo]
+		if DEBUG > 1:
+			# debugging only	 
+			str1 = f'\n*** Before the error:\n'	 \
+				f'fileid = {thisrec.fileid}\n' \
+				f'sd = {thisrec.sd}\n' \
+				f'location	= {loc}\n\n'
+			w(str1)
+
+	  
+	
+		myhtml += f'''\
+	<tr><td><b>{thisrec.fileid}</b></td>
+	<td>{thisrec.sd}</td>
+	<td>{loc}</td>
+	<td><input type="button"
+		onclick="location.href='/cgi-bin/edit.py?fileid={thisrec.fileid}';"			value="Edit" /></td>
+	<td><input type="button"
+		onclick="location.href='/cgi-bin/confirmdel.py?fileid={thisrec.fileid}';" value="Delete" /></td>
 </tr>'''
 
 	myhtml += f'''
@@ -372,7 +380,7 @@ def return_html(pageno: int, records: list):
 </div>
 </body></html>'''
 
-	if DEBUG > 1:
+	if DEBUG > 0:
 		w(f'\n\n>>> Finally: <<<\n{myhtml=}\n')
 	w('...wrote the html page in return_html()\n')
 	myfile.close()
@@ -397,7 +405,7 @@ def get_totalrecs_in_files_db() -> int:
 		w(f'received an Exception: \'{e}\'\n\n')
 		tup = sys.exc_info()
 		w(f'{tup[0]}: {tup[1]}\n')
-		error_page( )
+		error_page(e)
 		sys.exit(99)
 		
 	tup = cur.fetchone()
@@ -409,7 +417,7 @@ def get_totalrecs_in_files_db() -> int:
 
 
 def look_for_searchterm(term: str) -> list:
-	w(f'...entered look_for_searchterm({term})\n')
+	w(f'...entered \'look_for_searchterm({term})\'\n')
 	term = term.lower()
 	# fields to search: fileid, sd, ld, locations[lo],	owner, comments, cr, dt
 	simple_fields = ('fileid', 'sd', 'ld', 'owner', 'comments')
@@ -419,18 +427,25 @@ def look_for_searchterm(term: str) -> list:
 	cur = con.cursor()
 	lst = []
 	fileids = set()
-	w(f'\n\nDoing a search on {term}\n\n')
-
+	w(f'\n\n>>>>>Doing a search on {term}:\n')
+	
 	for field in simple_fields:
-		w(f'{field = }')
+		w(f'Trying in the {field} field...\n')
 		sql = f'SELECT * FROM newfiles WHERE {field} LIKE "%{term}"'
+		if DEBUG:
+			w('...trying: "{sql}"...\n')
 		cur.execute(sql)
 		l = cur.fetchall()
+		print('fetched {len(l)} rows.\n')
 		for tup in l:
 			fileid = tup[0]
-			if fileid not in fileids:
-				lst.append(tup)
-				fileids |= { fileid }
+			if term in l:
+				w('Found a match...\n')
+				if fileid not in fileids:
+					w('Adding new file id {fileid} to the list.')
+					lst.append(tup)
+					fileids |= { fileid }
+					
 	w('\n>>> After "simple" fields:\n{lst = }\n')
 	# Now, the rest of the fields:
 
@@ -481,7 +496,7 @@ def look_for_searchterm(term: str) -> list:
 		con.close()
 		rv = sorry(term) # calls sys.exit()
 		return rv
-	if DEBUG > 1:
+	if DEBUG:
 		w(f'{lst = }\n')
 	else:
 		w(f'{len(lst) = }\n')
@@ -501,7 +516,7 @@ def handle_searchterm(term):
 		error_page(e)
 		
 	# if we get here, we're looking for a search term.
-	w(f'we\'re going to look_for_searchterm({term})\n')
+	w(f'we\'re going to look_for_searchterm \'{term}\'\n')
 	lst = look_for_searchterm(term)
 	rv = foundit(term,lst)
 	return rv
@@ -533,25 +548,45 @@ def handle_next(nrecs: int, useless=''):
 	page_number =  h if isinstance(h,int) else int(h)
 	w(f'hidden page number value is {page_number}\n')
 	rec_count = (page_number - 1) * records_per_page
-	w(f'{rec_count = }\n')
+	w(f'{rec_count = }, {nrecs = }\n')
 	if rec_count <= nrecs:
 		w(f'About to call fetch records from Next\n')
+		w(f'we have {rec_count} records, and a total of {nrecs}\n')
 		result = fetch_records(page_number, records_per_page)
 		w('...back from from fetch_records:\n')
-		w(f'len(result) is {len(result)}')
+		w(f'len(result) is {len(result)}\n')
 		if (len(result)):
 			w(f'Calling return_html from Next.\n')
 			rv = return_html(page_number, result)
 		else:
 			page_number -= 1
+			w(f'Calling return_html from Next.\n')
+			rv = return_html(page_number, result)			 
+#			result = fetch_records(page_number, records_per_page)
+#			if len(result):
+#				rv = return_html(page_number,result)
+#			else:
+#				page_number = 1
+#				result = fetch_records(page_number, records_per_page)
+#				if len(result):
+#					rv = return_html(page_number,result)
+	else:
+		w('I think we are on the last page.\n')
+		page_number -= 1
+		w(f'page number value is now changed to: {page_number}\n')
+		rec_count = (page_number - 1) * records_per_page
+		w(f'{rec_count = }, {nrecs = }\n')
+		if rec_count < nrecs:
+			w(f'About to call fetch records from Next - to get the last page again.\n')
+			w(f'we have {rec_count} records, and a total of {nrecs}\n')
 			result = fetch_records(page_number, records_per_page)
-			if len(result):
-				rv = return_html(page_number,result)
+			w('...back from from fetch_records:\n')
+			w(f'len(result) is {len(result)}\n')
+			if (len(result)):
+				w(f'Calling return_html from Next to display the last page again.\n')
+				rv = return_html(page_number, result)
 			else:
-				page_number = 1
-				result = fetch_records(page_number, records_per_page)
-				if len(result):
-					rv = return_html(page_number,result)
+				rv = 99	   
 	return rv
 
 
@@ -564,9 +599,9 @@ def handle_previous(totalrecs):
 	w(f'page number is {page_number}\n')
 	
 	if (page_number >= 3):
-		page_number -= 2
+			page_number -= 2
 	else:
-		page_number = 1
+			page_number = 1
 		
 	rec_count = (page_number - 1) * records_per_page
 		
@@ -590,8 +625,7 @@ def handle_previous(totalrecs):
 						rv = return_html(page_number,result)
 	return rv
 
-global srchtrm
-
+# global srchtrm
 		
 def main():
 	w(f'\n...in in main() of {prog}.py.\n')
@@ -599,60 +633,73 @@ def main():
 	records_per_page: int = 5
 	totalrecs = get_totalrecs_in_files_db()
 	w(f'...after the call, {totalrecs = }\n\n')
-
 	term = form.getvalue('term')
 	if term:
-		term = term.lower()
+			term = term.lower()
+			w('term being sought is {term}\n')
 
 	button = form.getvalue('submit')
 	w(f'{button = }\n')
+
+#	 if (button == None):
+#		 button = 'All'
 	if 'Next' in button:
-		button = 'Next'
+			button = 'Next'
 	elif 'Previous' in button:
-		button = 'Previous'
+			button = 'Previous'
+
+#	 w('This is out of place.\n')
 	w(f'Now, {button = }\n')
 
-# Possible button presses for "submit":
-# This could come from change.html
-# or from this program calling itself.
-#	1. Search	(from change.html)
-#	2. All		(from change.html)
-# 2.5  Browse   (from change.html)
-#	3. Next		(from change.py, which writes a page with a form, with 'action="change.py"')
-#	4. Previous (from change.py)
-#	5. Menu		(from change.py)
+#	Possible button presses for "submit":
+#	This could come from change.html
+#	or from this program calling itself.
+#		1. Search	(from change.html)
+#		2. All		(from change.html)
+#		2.5	 Browse	(from change.html)
+#		3. Next		(from change.py, which writes a page with a form, with 'action="change.py"')
+#		4. Previous (from change.py)
+#		5. Menu		(from change.py)
+#		6. None		(Browsing all records from change.html)
 
-	w(f'Button pressed to get here: "{button}"\n')	   
+#	 w(f'Button pressed to get here: "{button}"\n')
 	fnargs = namedtuple('fnargs','func, arg')
 	w(f'\n\nWe have a value for "{fnargs = }"\n')
-	callbacks = { 'Search':	  fnargs(handle_searchterm,term), \
-				  'All':	  fnargs(handle_the_all_button,''), \
-                  'Browse':   fnargs(handle_the_all_button,''), \
-				  'Next':	  fnargs(handle_next,totalrecs), \
-				  'Previous': fnargs(handle_previous,totalrecs), \
-				  'Home':	  fnargs(main_menu,''), }
+	callbacks = { 
+		'Search':	fnargs(handle_searchterm,term), \
+		'All':		fnargs(handle_the_all_button,''), \
+		'Browse':	fnargs(handle_the_all_button,''), \
+		'Next':		fnargs(handle_next,totalrecs), \
+		'Previous': fnargs(handle_previous,totalrecs), \
+		'Home':		fnargs(main_menu,''), \
+		'None':		fnargs(handle_the_all_button,''), }
+
 	if DEBUG:
 		for k,v in callbacks.items():
 			w(f'{k} = {v}\n')
-			
+
 	buttons = callbacks.keys()
 	w(f'\n{buttons = }\n')
+	w(f'...THE button is {button}.\n')
+	w(f'...We\'re looking for that button among\n')
+	w(f'the buttons (listed above) that have defined callbacks.\n\n')
 	
 #	 button: Could be an one of the five.
 #	 Exercise the appropriate subroutine
-
+	
 	if button in callbacks.keys():
+		w('\n...we found the callback for {button}!\n')
 		c = callbacks[button]
 		rv = c.func(c.arg)
 	else:
+		w('\n...didn\'t find it, going to main menu.\n')
 		rv = main_menu()
-		
 	return(rv)
 
 if __name__ == '__main__':
 	w('-' * 66)
-	w(f'\n...in change.py __main__, debugging on {today} at {now()}\n')
+	w(f'\n...in change.py ({__name__}), debugging on {today} at {now()}\n')
 	w(f'\nabout to call {prog}.py::main()\n\n')
 	rv = main()
-	w(f'Exiting {prog}.py with exit code {rv}.')
-	sys.exit(rv)
+#	w(f'Exiting {prog}.py with exit code {rv}.')
+#	sys.exit(rv)
