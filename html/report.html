@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+ "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+	/>	
+	<style>
+      @import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+	  
+      body {
+		  margin: 100px;
+		  box-sizing: border-box;
+		  background-color: lightblue;
+      }
+	  
+	  h1 {
+		  color: #004040;
+	  }
+	  
+	  h2 {
+		  color: #004040;
+	  }
+	  
+	  p {
+		  color: #004040;
+		  font-size: 16pt;
+		  margin: 12px;
+	  }
+	  
+	  
+	  .myform {
+		  font-size: 18pt;
+		  padding: 10px 20px;
+		  color: #004040;
+	  }
+	  
+	  .entry {
+		  color: #004040;
+	  }
+	  
+	</style>
+	<script>
+	  function getDate() {
+		  var dt = new Date();
+		  return dt;
+	  }
+	</script>
+  </head>
+  
+  <body>
+	<div class="report">
+	  <title>dkfiles report page</title>
+	  <h1>Generate a report for dkfiles</h1>
+	  <h2 class="entry">Hit the &quot;Report&quot; button to start</h2>
+	  <p id="entry" class="entry" margin="50px" />
+	  <form id="myform" class="myform" method="POST"
+			action="/cgi-bin/report.py">
+		<br />
+		<input type="submit" id="submit" name="submit"
+			   value="Report"/>
+		<br />
+		<input type="submit" id="submit" name="submit" value="Quit" />
+		<br />
+	  </form>
+	</div>
+  </body>
+</html>
