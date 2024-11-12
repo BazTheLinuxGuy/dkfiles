@@ -1,1 +1,145 @@
+/* dkfiles.css - Meant as a CSS Template for the dkfiles project
+# This notation: Friday, May 17, 2024 17:00
+# Updated: Saturday, June 15, 2024 08:45
+*/
+@import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+body {
+	background-color: #e1e1e1;
+	color: #004066;
+	width: 90%;
+	border-style: solid;
+	gap: 20px;
+	right-margin: 50px;
+	left-margin: 50px;
+	padding: 20px;
+}	
+header {
+	display: flex;
+	background-color: #004066;
+	color: #e1e1e1;
+	font-size:10pt;
+	font-family: "Georgia","Sriracha",cursive,sans-serif;
+	align-items: left; padding: 0 5px;
+}
 
+body {
+  background-color: lightblue;
+  color: #004066;
+  margin-left: 50px;
+}
+header {
+    display: flex; 
+	background-color: #004066;
+	color: #e1e1e1;
+    font-size:10pt;
+	font-family: "Georgia","Verdana",cursive,sans-serif;
+	align-items: left;
+}
+nav {
+	display: flex;
+	background-color: #e1f1f1;
+	color: #004066;
+	font-family: "Verdana","Georgia",sans-serif;
+	font-size: 12pt; 
+}								
+
+a {
+	color: #004066;
+	background-color: #e1f1f1;
+	padding-right: 20px;
+	font-size: 12pt;
+}
+
+nav.nav {
+	display: flex;
+	background-color: #e1f1f1;
+	color: #004066;
+	font-family: "Verdana","Georgia",sans-serif;
+	font-size: 12pt; 
+}								
+
+a.nav {
+	color: #004066;
+	background-color: #e1f1f1;
+	padding-right: 20px;
+	font-size: 12pt;
+}
+
+
+h1, h2, h3, h4, h5, p, label { margin-left: 20px; }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 25px;
+  background-color: #286078;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;  
+  padding-bottom: 10px;
+}
+
+.grid-container div {
+/*	background-color: rgba(255, 255, 255, 0.5); */
+	color: #004066;
+	background-color: #D0F0FF;
+	jutify-items: center;
+	text-align: center;
+	padding-top: 10px;
+	padding-left: 10px;
+	padding-bottom: 20px;
+	padding-right: 10px;
+	font-size: 1.2em;
+	font-family: "Georgia","Lucida Console",sans-serif;
+}
+
+table,th,td { border: 2px solid black; }
+td { padding-left: 15px; padding-right: 15px; padding-top: 0px; padding-bottom: 0px; }
+
+.main { color: #004066: }
+.main table, .main th, .main td { border: 1px solid black; }
+/*  .main thead { color: green; } */
+
+.main th, .main td { padding: 5px 20px; }
+
+.mainmenu div {
+	background-color: #286088;
+	text-align: center;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}	
+					 
+.copy {
+	position: absolute;
+	justify-content: center;
+	align-items: bottom;
+	padding: 50px 0px;
+}
+.copy-text p {
+	position: relative;
+	font-size: 7pt;
+	font-weight: bold;
+	color: black;
+	left-margin: 10px;
+	bottom: auto;
+}
+/*        ====================================    */    
+    
+/*
+table.main { width: 70% } 
+td.main { padding: 0; color: pink; background-color: maroon; }
+*/
+.copy {
+  position: absolute;
+  justify-content: bottom;
+  align-items: bottom;
+  padding: 50px 0 0 0;
+}
+.copy-text p {
+  position: relative;
+  font-size: 7pt;
+  font-weight: bold;
+  color: black;
+  margin: 10 0px;
+  bottom: auto;
+}
