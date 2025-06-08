@@ -1,6 +1,6 @@
 # Web Application: dkfiles &#x1F53B;
 
-**This application**, amateur though it is, is designed to record the contents, location, and owner of each file. The files I am talking about are paper files, the kind you put in hanging file folders.
+**This application**, amateur though it is, is designed to record the contents, location, and owner of our files. The files I am talking about are paper files, the kind you put in hanging file folders.  The files we use are typical home stuff: Credit card records, cable TV guides, medical insurance informatiom. etc.
 
 ## About the web application:
   This application is built from a combination of **html**, **cgi** programs written in **python**, styled rather primitively with **css**. Almost *no* javascript is used. I know a little javascript, but not enough to add features to a web page. This may change in the future.
@@ -21,6 +21,6 @@
 
 
 ##### More of this description will be added.
-
+###### __caution! work in progress!__
 &copy; 2024, 2025 Kevin R. Baumgarten. All rights reserved. 🍁
 
