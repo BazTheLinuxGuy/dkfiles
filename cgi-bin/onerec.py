@@ -86,7 +86,6 @@ def htmlpage(thefile):
     <header>Details of the file and options to change or delete the file from the database</header>
     <nav><a href="/menu.html">Home</a><a href="/lookup.html">Look up a file</a>
     <a href="/cgi-bin/report.py">View all files</a><a href="/cgi-bin/report.py">Edit or Delete</a></nav>
-    
 <h2>Record {thefile.fileid}</h2>'''
     
     w('\n...about to create the table.\n')

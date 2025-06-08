@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 ''' This cgi program responds to the form on 'lookup.html' '''
 
-import os
 import sys
 import sqlite3
 import mycgi
@@ -13,10 +12,10 @@ form = mycgi.Form()
 
 def sorry(searchterm):
     w(f'Entered "sorry({searchterm})"\n')
-    
+
     myhtml = '''
 <html><head><meta charset="utf-8"><title>Lookup Results</title>
-<link rel="stylesheet" href="/css/dkfil es.css" />
+<link rel="stylesheet" href="/css/dkfiles.css" />
 <style>
 body {
   text-align: left; left-margin: 75px; background-color: #e1e1e1;
@@ -106,7 +105,7 @@ td { padding-left: 10px; }
         <td><center><button onclick="location.href='/cgi-bin/onerec.py?fileid={e.fileid}';">GO</button></center></td></tr>'''
         
     myhtml += '''
-<tr><td colspan="4"><img src="/hanging-office-file-folders.png" alt="Hanging File Folders" /></td></tr></table>
+<tr><td colspan="4"><img src="/images/hanging-office-file-folders.png" alt="Hanging File Folders" /></td></tr></table>
 <hr /><br />
 <button id="lookup" name="lookup" onclick="location.href='/lookup.html';">Lookup another</button>
 <br /><br />
@@ -135,7 +134,7 @@ def lookup_in_database(searchterm: str):
     
     con = sqlite3.connect(db)
     cur = con.cursor()
-    
+
     lst = []
     fileids = set()
     # Try the uncomplicated ones first
@@ -147,13 +146,14 @@ def lookup_in_database(searchterm: str):
         sql = f'SELECT * FROM newfiles WHERE {field} LIKE "%{s}%"'
         cur.execute(sql)
         l = cur.fetchall()
-        w(f'\n{sql = }\nlen(l)={len(l)}\n')
+        w(f'\n\n*** {sql = }\nlen(l)={len(l)} ***\n\n')
         for tup in l:
-            fileid = tup[0]
-            if fileid not in fileids:
-                w(f'...adding {fileid} to list\n')
-                lst.append(tup)
-                fileids |= { fileid }
+            if tup:
+                fileid = tup[0]
+                if fileid not in fileids:
+                    w(f'...adding {fileid} to list\n')
+                    lst.append(tup)
+                    fileids |= { fileid }
         w(f'After {field}:\n')
         w(f'\n\n{lst = }\n\n')
         w('\n')
@@ -178,21 +178,25 @@ def lookup_in_database(searchterm: str):
     sql = 'SELECT fileid, cr FROM newfiles'
     cur.execute(sql)
     l = cur.fetchall()
+    w(f'\n*** possible problem: {l=}')
     for tup in l:
+        w('\nLooking for empty cr...\n')
+        w(f'{tup = }')
         # we're retrieving two fields, the second one is "cr" (creation date)
-        someday = ymd2dt(tup[1])
-        if s in someday:
-            sql = f'SELECT * FROM newfiles WHERE fileid = {tup[0]}'
-            cur.execute(sql)
-            t = cur.fetchone()
-            fileid = t[0]
-            w('for field cr, fileid="{fileid}"\n')
-            w('{fileids = }\n')
-            if fileid not in fileids:
-                lst.append(t)
-                fileids |= { fileid }
+        if tup[0] is not None:
+            someday = ymd2dt(tup[1])
+            if s in someday:
+                sql = f'SELECT * FROM newfiles WHERE fileid = {tup[0]}'
+                cur.execute(sql)
+                t = cur.fetchone()
+                fileid = t[0]
+                w('for field cr, fileid="{fileid}"\n')
+                w('{fileids = }\n')
+                if fileid not in fileids:
+                    lst.append(t)
+                    fileids |= { fileid }
     w(f'After creation date check, at {now()}: len(lst) is...\n{len(lst)}\n\n')
-             
+
     # Modification date:
     sql = 'SELECT fileid, dt FROM newfiles WHERE dt IS NOT NULL'
     cur.execute(sql)

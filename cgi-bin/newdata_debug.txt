@@ -1,0 +1,21 @@
+We opened the file newdata_debug.txt
+We opened the file newdata_debug.txt
+We opened the file newdata_debug.txt
+
+------------------------------------------------------------------
+** Debugging newdata on Jun 08, 2025 Sun at 04:14:22.
+
+in main()...
+...entering get_nextid() in newdata
+got nextid as 2023
+while we are at it:
+prog = 'newdata', today = 'Jun 08, 2025 Sun', etc.
+After head: myhtml = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>testing newdata</title>\n\t<link rel="stylesheet" href="/css/entry.css" /></head>'
+
+
+myhtml = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>testing newdata</title>\n\t<link rel="stylesheet" href="/css/entry.css" /></head>\n<body><h2>E N T E R&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;R E C O R D !</h2>\n<p>Fill in the fields and see the result when you press &quot;submit&quot;</p>\n<form name="theform" id="theform" method="post" action="/cgi-bin/process_new.py">\n<label for="fileid">File id:</label><br />\n<input type="number" size="6" id="fileid" name="fileid" value="2023"/><br />\n<label for="shortdesc">Short description:</label><br />\n<input type="text" size="50" id="shortdesc" name="shortdesc" /><br />\n<label for="longdesc">More details:</label><br />\n<textarea cols="50" rows="3" name="longdesc" id="longdesc" >\n</textarea><br /><p>Location:</p><select name="place" id="place">'
+
+
+
+myhtml = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>testing newdata</title>\n\t<link rel="stylesheet" href="/css/entry.css" /></head>\n<body><h2>E N T E R&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;R E C O R D !</h2>\n<p>Fill in the fields and see the result when you press &quot;submit&quot;</p>\n<form name="theform" id="theform" method="post" action="/cgi-bin/process_new.py">\n<label for="fileid">File id:</label><br />\n<input type="number" size="6" id="fileid" name="fileid" value="2023"/><br />\n<label for="shortdesc">Short description:</label><br />\n<input type="text" size="50" id="shortdesc" name="shortdesc" /><br />\n<label for="longdesc">More details:</label><br />\n<textarea cols="50" rows="3" name="longdesc" id="longdesc" >\n</textarea><br /><p>Location:</p><select name="place" id="place"><option value=rf>Red file drawers - upper</option><option value=rb>Red file drawers - lower</option><option value=dd>Davids file drawers - upper</option><option value=db>Davids file drawers - lower</option><option value=ut>Underneath long table</option><option value=at>Plastic drawers on long table</option><option value=cl>In the bedroom closet</option><option value=ds>Downstairs in 214</option><option value=bz>With Bryan - on desk?</option><option value=un>Unknown location</option><option value=lo>Lost, as far as we can tell</option></select>'
+

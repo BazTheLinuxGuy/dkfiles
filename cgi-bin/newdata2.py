@@ -58,23 +58,9 @@ def return_error_page(e,tup):
 
 def return_html(nextid: int) -> None:
 	# first, do the header
-	myhtml = '''<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>testing newdata</title>
-	<link rel="stylesheet" href="/css/entry.css" /></head>'''
+	myhtml = '''<!DOCTYPE html><html lang="en"><head><meta charset="utf-8" /><title>testing newdata</title><link rel="stylesheet" href="/css/entry.css" /></head>'''
 
 	w(f'After head: {myhtml = }\n')
-
-	# now, the body
-	myhtml+= f'''
-<body><h2>E N T E R&nbsp;&nbsp;&nbsp;A&nbsp;&nbsp;&nbsp;R E C O R D !</h2>
-<p>Fill in the fields and see the result when you press &quot;submit&quot;</p>
-<form name="theform" id="theform" method="post" action="/cgi-bin/process_new.py">
-<label for="fileid">File id:</label><br />
-<input type="number" size="6" id="fileid" name="fileid" value="{nextid}"/><br />
-<label for="shortdesc">Short description:</label><br />
-<input type="text" size="50" id="shortdesc" name="shortdesc" /><br />
-<label for="longdesc">More details:</label><br />
-<textarea cols="50" rows="3" name="longdesc" id="longdesc" >
-</textarea><br /><p>Location:</p><select name="place" id="place">'''
 	w(f'\n\n{myhtml = }')
 	w('\n\n')
 	for key in list(locations):

@@ -8,7 +8,7 @@ import mycgi
 
 from MyFile import *
 
-DEBUG = 0
+DEBUG = 2
 
 global form
 form = mycgi.Form()
@@ -336,24 +336,24 @@ def return_html(pageno: int, records: list):
 
 	w('We are now going to enumerate the record from the database.\n')
 	w(f'{records=}\n')
-	
-	# DEBUGGING:	
+
+	# DEBUGGING:
 	w(f'We got back {len(records)}\n')
 	for i, tup in enumerate(records):
 		thisrec = onefile._make(tup)
 		w(f'{thisrec=}\n')
-	
-		loc = locations[thisrec.lo]
-		if DEBUG > 1:
-			# debugging only	 
+
+        if DEBUG > 1:
+			# debugging only
 			str1 = f'\n*** Before the error:\n'	 \
 				f'fileid = {thisrec.fileid}\n' \
 				f'sd = {thisrec.sd}\n' \
 				f'location	= {loc}\n\n'
 			w(str1)
+		    loc = locations[thisrec.lo]
 
-	  
-	
+
+
 		myhtml += f'''\
 	<tr><td><b>{thisrec.fileid}</b></td>
 	<td>{thisrec.sd}</td>
@@ -407,7 +407,7 @@ def get_totalrecs_in_files_db() -> int:
 		w(f'{tup[0]}: {tup[1]}\n')
 		error_page(e)
 		sys.exit(99)
-		
+
 	tup = cur.fetchone()
 	con.close()
 	totalrecs = tup[0]
@@ -422,13 +422,13 @@ def look_for_searchterm(term: str) -> list:
 	# fields to search: fileid, sd, ld, locations[lo],	owner, comments, cr, dt
 	simple_fields = ('fileid', 'sd', 'ld', 'owner', 'comments')
 	complicated_fields = ('lo','cr','dt')
-	
+
 	con = sqlite3.connect(db)
 	cur = con.cursor()
 	lst = []
 	fileids = set()
 	w(f'\n\n>>>>>Doing a search on {term}:\n')
-	
+
 	for field in simple_fields:
 		w(f'Trying in the {field} field...\n')
 		sql = f'SELECT * FROM newfiles WHERE {field} LIKE "%{term}"'
@@ -445,11 +445,11 @@ def look_for_searchterm(term: str) -> list:
 					w('Adding new file id {fileid} to the list.')
 					lst.append(tup)
 					fileids |= { fileid }
-					
+
 	w('\n>>> After "simple" fields:\n{lst = }\n')
 	# Now, the rest of the fields:
 
-	# Location:	  
+	# Location:
 	for k,v in locations.items():
 		if term in v.lower():
 			sql = f'SELECT * FROM newfiles WHERE lo = "{k}"'
@@ -458,7 +458,7 @@ def look_for_searchterm(term: str) -> list:
 			for tup in l:
 				fileid = tup[0]
 				if fileid not in fileids:
-					fileids |= { fileid }					 
+					fileids |= { fileid }
 					lst.append(tup)
 
 
@@ -476,7 +476,7 @@ def look_for_searchterm(term: str) -> list:
 			lst.append(t)
 
 	# Modification date:
-	
+
 	sql = 'SELECT fileid, dt FROM newfiles WHERE dt IS NOT NULL'
 	cur.execute(sql)
 	l = cur.fetchall()
@@ -500,11 +500,11 @@ def look_for_searchterm(term: str) -> list:
 		w(f'{lst = }\n')
 	else:
 		w(f'{len(lst) = }\n')
-		
+
 	con.close()
 	return sorted(lst)
 
-	
+
 def handle_searchterm(term):
 	w('\n...inside handle_searchterm()\n')
 	lst = []
@@ -514,13 +514,13 @@ def handle_searchterm(term):
 			raise ValueError('No search term, can not continue.')
 	except ValueError as e:
 		error_page(e)
-		
+
 	# if we get here, we're looking for a search term.
 	w(f'we\'re going to look_for_searchterm \'{term}\'\n')
 	lst = look_for_searchterm(term)
 	rv = foundit(term,lst)
 	return rv
-	
+
 
 def handle_the_all_button(useless=''):
 	w('\n\n...in handle_the_all_button()\n')
@@ -561,7 +561,7 @@ def handle_next(nrecs: int, useless=''):
 		else:
 			page_number -= 1
 			w(f'Calling return_html from Next.\n')
-			rv = return_html(page_number, result)			 
+			rv = return_html(page_number, result)
 #			result = fetch_records(page_number, records_per_page)
 #			if len(result):
 #				rv = return_html(page_number,result)
