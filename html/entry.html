@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8" />
+	<title>Data Entry</title>
+	<link rel="stylesheet" href="/css/lookup.css" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+	
+    body {
+		margin: 10px;
+		box-sizing: border-box;
+		background-color: #e1e1e1;
+	}
+	
+	header {
+		display: flex; 
+		background-color: rgb(75,70,70);
+		color: #e1f1f1;
+		font-size:10pt;
+		font-family: Arial,sans-serif;
+	}	
+
+
+	h1 {
+		color: #004066;
+	}
+	
+	h2 {
+		color: #004066;
+	}
+	
+	p {
+		color: #004066;
+		font-size: 16pt;
+		margin: 12px;
+	}
+
+	a {
+		text-align: left;
+		padding-right: 25px;
+		padding-left: 0;
+		color: navy;
+	}
+	.main {
+/*		display: flex; */
+		justify-content: center;
+		align-items: center;
+/*		width: 50% */
+		color: #004066;
+		padding: 20px 10px;
+	}
+	.main h1 {
+		color: #004066;
+		text-align: center;
+		font-family: 'Sriracha', cursive;
+		text-decoration: none;
+		margin-left: 75px;
+	}
+	.main p {
+		color: #004066;
+		font-size: 20px;
+		text-align: left;
+		font-family: 'Sriracha', cursive;
+		left-margin: 75px;
+	}
+	.copy {
+		position: relative;
+		justify-content: left;
+		align-items: bottom;
+		padding: 0px 20px;
+	}
+	.copy-text p {
+		position: absolute;
+		font-size: 7pt;
+		font-weight: bold;
+		color: black;
+		margin: 10px 0;
+		bottom: auto;
+	}
+  </style></head>
+  <body>
+	<nav>
+	  <a href="/menu.html">Home (Menu)</a>
+	  <a href="/lookup.html">Look up a file</a>
+	  <a href="/report.html">View all files</a>
+    </nav>
+  	<header>This form will put new information into the sql
+  	  database</header>
+	<div id="rowcount"></div>
+	  <h2>S I M P L E !</h2>
+	  <p Just fill in the fields and see the result when you press &quot;submiti&quot;</p>
+		<form id="myform" class="myform" method="POST" action="/cgi-bin/entry.py">
+		  <label for="fileid">File id:</label><br />
+		  <input type="text" size="6" id="fileid" name="fileid"/>
+		  <br />
+		  <label for="shortdesc">Short description:</label>
+		  <br />
+		  <input type="text" size="50" id="shortdesc" name="shortdesc" />
+		  <br />
+		  <label for="longdesc">More details:</label>
+		  <br />
+		  <textarea type="text" cols="50" rows="3" name="longdesc"
+					id="longdesc"></textarea>
+		  <br />
+		  <label for="location">File location:</label>
+		  <br />
+		  <select name="location" id="location">
+			<option value="rf">red file drawers - upper</option>
+			<option value="rb">red file drawers - lower</option>
+			<option value="dd">David\'s desk drawers - upper</option>
+			<option value="db">David\'s desk drawers - lower</option>
+			<option value="ut">under long table</option>
+			<option value="cl">bedroom closet</option>
+			<option value="ds">downstairs</option>
+			<option value="bz">with Bryan</option>
+			<option value="un">unknown</option>
+			<option value="lo">lost</option>
+		  </select>
+		  <p>Owner:</p>
+		  <input type="radio" id="david" name="owner" value="David" />
+		  <label for="david">David</label><br />
+		  <input type="radio" id="bryan" name="owner" value="Bryan" />
+		  <label for="bryan">Bryan</label><br />
+		  <input type="radio" id="both" name="owner" value="Both" />
+		  <label for="both">Both</label><br />
+		  <input type="radio" id="unassigned" name="owner"
+				 value="Unassigned" />
+		  <label for="unassigned">Unassigned</label><br />
+		  <label for="comments">Comments:</label><br />
+		  <input type="text" id="comments" name="comments" size="60" />
+		  <br />
+		  <br /><br />
+		  <input type="submit" value="Submit" />
+		</form>
+		<hr />
+		<br />
+		<button name="menu" id="menu" onclick='location.href="/menu.html";'>Menu</button>
+		<br />
+	<div class="copy">
+	  	<div class="copy-text">
+	  <p>&copy; 2024 Kevin Baumgarten, All rights reserved.</p>
+	</div>
+  </div>
+</body></html>
