@@ -110,6 +110,13 @@ const VOWELS = 'aeiou';
 let clipboardTimeout = null;
 let currentPassword = '';
 
+// Helper function to escape HTML to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
 // Cryptographically secure random number generator
 function getSecureRandomNumber(max) {
     const array = new Uint32Array(1);
@@ -377,10 +384,12 @@ function updateHistoryDisplay() {
     historyList.innerHTML = history.map((item, index) => {
         const date = new Date(item.timestamp);
         const formattedDate = date.toLocaleString();
+        const escapedPassword = escapeHtml(item.password);
+        const escapedDate = escapeHtml(formattedDate);
         return `
             <div class="history-item">
-                <span class="history-password">${item.password}</span>
-                <span class="history-date">${formattedDate}</span>
+                <span class="history-password">${escapedPassword}</span>
+                <span class="history-date">${escapedDate}</span>
                 <button class="copy-history-btn" data-index="${index}">Copy</button>
             </div>
         `;
@@ -419,13 +428,16 @@ function batchGenerate() {
         passwords.push(generatePassword(options.length, options));
     }
     
-    batchResults.innerHTML = passwords.map((pwd, index) => `
-        <div class="batch-item">
-            <span class="batch-number">${index + 1}.</span>
-            <span class="batch-password">${pwd}</span>
-            <button class="copy-batch-btn" data-password="${pwd}">Copy</button>
-        </div>
-    `).join('');
+    batchResults.innerHTML = passwords.map((pwd, index) => {
+        const escapedPassword = escapeHtml(pwd);
+        return `
+            <div class="batch-item">
+                <span class="batch-number">${index + 1}.</span>
+                <span class="batch-password">${escapedPassword}</span>
+                <button class="copy-batch-btn" data-password="${escapedPassword}">Copy</button>
+            </div>
+        `;
+    }).join('');
     
     // Add event listeners
     document.querySelectorAll('.copy-batch-btn').forEach(btn => {
@@ -438,96 +450,6 @@ function batchGenerate() {
             }, 2000);
         });
     });
-}
-
-// Simple encryption/decryption using AES-GCM
-async function encryptData(data, password) {
-    const encoder = new TextEncoder();
-    const dataBuffer = encoder.encode(JSON.stringify(data));
-    
-    // Derive key from password
-    const keyMaterial = await window.crypto.subtle.importKey(
-        'raw',
-        encoder.encode(password),
-        { name: 'PBKDF2' },
-        false,
-        ['deriveBits', 'deriveKey']
-    );
-    
-    const salt = window.crypto.getRandomValues(new Uint8Array(16));
-    
-    const key = await window.crypto.subtle.deriveKey(
-        {
-            name: 'PBKDF2',
-            salt: salt,
-            iterations: 100000,
-            hash: 'SHA-256'
-        },
-        keyMaterial,
-        { name: 'AES-GCM', length: 256 },
-        false,
-        ['encrypt']
-    );
-    
-    const iv = window.crypto.getRandomValues(new Uint8Array(12));
-    
-    const encryptedData = await window.crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv: iv },
-        key,
-        dataBuffer
-    );
-    
-    // Combine salt, iv, and encrypted data
-    const result = new Uint8Array(salt.length + iv.length + encryptedData.byteLength);
-    result.set(salt, 0);
-    result.set(iv, salt.length);
-    result.set(new Uint8Array(encryptedData), salt.length + iv.length);
-    
-    // Convert to base64
-    return btoa(String.fromCharCode.apply(null, result));
-}
-
-async function decryptData(encryptedBase64, password) {
-    const encoder = new TextEncoder();
-    const decoder = new TextDecoder();
-    
-    // Decode base64
-    const encryptedData = Uint8Array.from(atob(encryptedBase64), c => c.charCodeAt(0));
-    
-    // Extract salt, iv, and data
-    const salt = encryptedData.slice(0, 16);
-    const iv = encryptedData.slice(16, 28);
-    const data = encryptedData.slice(28);
-    
-    // Derive key from password
-    const keyMaterial = await window.crypto.subtle.importKey(
-        'raw',
-        encoder.encode(password),
-        { name: 'PBKDF2' },
-        false,
-        ['deriveBits', 'deriveKey']
-    );
-    
-    const key = await window.crypto.subtle.deriveKey(
-        {
-            name: 'PBKDF2',
-            salt: salt,
-            iterations: 100000,
-            hash: 'SHA-256'
-        },
-        keyMaterial,
-        { name: 'AES-GCM', length: 256 },
-        false,
-        ['decrypt']
-    );
-    
-    const decryptedData = await window.crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv: iv },
-        key,
-        data
-    );
-    
-    return JSON.parse(decoder.decode(decryptedData));
 }
 
 // Vault functions
@@ -578,11 +500,14 @@ function updateVaultDisplay() {
     vaultList.innerHTML = vault.map((item, index) => {
         const date = new Date(item.timestamp);
         const formattedDate = date.toLocaleString();
+        const escapedLabel = escapeHtml(item.label);
+        const escapedPassword = escapeHtml(item.password);
+        const escapedDate = escapeHtml(formattedDate);
         return `
             <div class="vault-item">
-                <div class="vault-label">${item.label}</div>
-                <div class="vault-password">${item.password}</div>
-                <div class="vault-date">${formattedDate}</div>
+                <div class="vault-label">${escapedLabel}</div>
+                <div class="vault-password">${escapedPassword}</div>
+                <div class="vault-date">${escapedDate}</div>
                 <button class="copy-vault-btn" data-index="${index}">Copy</button>
                 <button class="delete-vault-btn" data-index="${index}">Delete</button>
             </div>
