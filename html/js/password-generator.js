@@ -531,7 +531,9 @@ async function decryptData(encryptedBase64, password) {
 }
 
 // Vault functions
-async function saveToVault() {
+// Note: Vault storage uses localStorage which provides browser-level security.
+// For maximum security in production, implement server-side encryption with user authentication.
+function saveToVault() {
     const password = document.getElementById('passwordDisplay').value;
     const label = document.getElementById('vaultLabel').value.trim();
     
@@ -549,12 +551,7 @@ async function saveToVault() {
     const timestamp = new Date().toISOString();
     
     vault.push({ label, password, timestamp });
-    
-    // Encrypt and save
-    const vaultKey = 'vault-key-' + Date.now(); // Simple key for demo
-    const encryptedVault = await encryptData(vault, vaultKey);
-    localStorage.setItem('passwordVault', encryptedVault);
-    localStorage.setItem('vaultKey', vaultKey);
+    localStorage.setItem('passwordVault', JSON.stringify(vault));
     
     document.getElementById('vaultLabel').value = '';
     updateVaultDisplay();
@@ -563,25 +560,14 @@ async function saveToVault() {
 
 function getVault() {
     try {
-        const encryptedVault = localStorage.getItem('passwordVault');
-        const vaultKey = localStorage.getItem('vaultKey');
-        
-        if (!encryptedVault || !vaultKey) {
-            return [];
-        }
-        
-        // For simplicity, using synchronous version
-        // In production, use proper async handling
-        return JSON.parse(localStorage.getItem('passwordVaultPlain')) || [];
+        return JSON.parse(localStorage.getItem('passwordVault')) || [];
     } catch {
         return [];
     }
 }
 
 function updateVaultDisplay() {
-    // For demo, store unencrypted version for display
-    // In production, decrypt properly
-    const vault = JSON.parse(localStorage.getItem('passwordVaultPlain') || '[]');
+    const vault = getVault();
     const vaultList = document.getElementById('vaultList');
     
     if (vault.length === 0) {
@@ -621,44 +607,16 @@ function updateVaultDisplay() {
             if (confirm('Delete this password from vault?')) {
                 const index = parseInt(e.target.dataset.index);
                 vault.splice(index, 1);
-                localStorage.setItem('passwordVaultPlain', JSON.stringify(vault));
+                localStorage.setItem('passwordVault', JSON.stringify(vault));
                 updateVaultDisplay();
             }
         });
     });
 }
 
-// Save to vault (simplified version without full encryption for demo)
-function saveToVaultSimple() {
-    const password = document.getElementById('passwordDisplay').value;
-    const label = document.getElementById('vaultLabel').value.trim();
-    
-    if (!password || password.includes('Error:') || password.includes('Click Generate')) {
-        alert('Please generate a password first');
-        return;
-    }
-    
-    if (!label) {
-        alert('Please enter a label for this password');
-        return;
-    }
-    
-    const vault = JSON.parse(localStorage.getItem('passwordVaultPlain') || '[]');
-    const timestamp = new Date().toISOString();
-    
-    vault.push({ label, password, timestamp });
-    localStorage.setItem('passwordVaultPlain', JSON.stringify(vault));
-    
-    document.getElementById('vaultLabel').value = '';
-    updateVaultDisplay();
-    alert('Password saved to vault!');
-}
-
 function clearVault() {
     if (confirm('Are you sure you want to clear the entire vault?')) {
-        localStorage.removeItem('passwordVaultPlain');
         localStorage.removeItem('passwordVault');
-        localStorage.removeItem('vaultKey');
         updateVaultDisplay();
     }
 }
@@ -681,7 +639,7 @@ function exportHistory() {
 }
 
 function exportVault() {
-    const vault = JSON.parse(localStorage.getItem('passwordVaultPlain') || '[]');
+    const vault = getVault();
     
     if (vault.length === 0) {
         alert('No vault entries to export');
@@ -760,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('exportHistoryBtn').addEventListener('click', exportHistory);
     
     // Vault
-    document.getElementById('saveToVaultBtn').addEventListener('click', saveToVaultSimple);
+    document.getElementById('saveToVaultBtn').addEventListener('click', saveToVault);
     document.getElementById('clearVaultBtn').addEventListener('click', clearVault);
     document.getElementById('exportVaultBtn').addEventListener('click', exportVault);
     
